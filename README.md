@@ -41,8 +41,8 @@ Ces commandes necessitent le niveau d'operateur 2.
 
 ## Configuration
 
-Chaque fonction du mod a son propre fichier de configuration serveur, genere au premier lancement
-d'un monde dans `serverconfig/` (dossier de sauvegarde du monde) :
+Chaque fonction du mod a son propre fichier de configuration serveur, genere dans le dossier
+`config/` au premier demarrage du serveur (verifie en lancant reellement un serveur de test) :
 
 **`orerespawn-respawn.toml`** - delai et securite de la reapparition
 - `respawnDelaySeconds` - delai de reapparition, en secondes de temps reel (defaut : 86400).
@@ -73,7 +73,24 @@ Prerequis : JDK 21.
 ./gradlew build
 ```
 
-Le jar compile se trouve ensuite dans `build/libs/`.
+Le jar compile se trouve ensuite dans `build/libs/orerespawn-1.0.0.jar`.
+
+## Tester
+
+Le mod est annote `@Mod(dist = Dist.DEDICATED_SERVER)` : il ne se charge que sur un **serveur
+dedie** (NeoForge 1.21.1, version 21.1.87 ou compatible). En solo (singleplayer), le jeu tourne
+toujours cote client (avec un serveur integre en interne), donc le mod ne se chargera pas - il
+faut lancer ou rejoindre un vrai serveur dedie pour le tester :
+
+1. Installer un serveur NeoForge 1.21.1 (21.1.87+).
+2. Copier `orerespawn-1.0.0.jar` dans le dossier `mods/` du serveur.
+3. Demarrer le serveur, verifier dans les logs que `OreRespawn 1.0.0 (orerespawn)` apparait dans
+   la liste des mods charges.
+4. Les fichiers `orerespawn-respawn.toml`, `orerespawn-detection.toml` et
+   `orerespawn-dimensions.toml` apparaissent dans `config/`.
+5. En jeu (avec les droits OP niveau 2) : miner un minerai, verifier `/orerespawn list` et
+   `/orerespawn count`, puis `/orerespawn respawn` pour le faire reapparaitre immediatement sans
+   attendre le delai.
 
 ## Structure du projet
 
