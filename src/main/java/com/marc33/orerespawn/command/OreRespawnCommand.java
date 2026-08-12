@@ -1,7 +1,7 @@
 package com.marc33.orerespawn.command;
 
 import com.marc33.orerespawn.OreRespawnMod;
-import com.marc33.orerespawn.config.OreRespawnConfig;
+import com.marc33.orerespawn.config.RespawnConfig;
 import com.marc33.orerespawn.data.MinedOreEntry;
 import com.marc33.orerespawn.data.OreRespawnSavedData;
 import com.marc33.orerespawn.event.OreRespawnTicker;
@@ -61,7 +61,7 @@ public final class OreRespawnCommand {
         int fromIndex = (clampedPage - 1) * ENTRIES_PER_PAGE;
         int toIndex = Math.min(fromIndex + ENTRIES_PER_PAGE, entries.size());
 
-        long delayMillis = OreRespawnConfig.RESPAWN_DELAY_SECONDS.get() * 1000L;
+        long delayMillis = RespawnConfig.RESPAWN_DELAY_SECONDS.get() * 1000L;
         long now = System.currentTimeMillis();
 
         int finalClampedPage = clampedPage;
@@ -97,7 +97,7 @@ public final class OreRespawnCommand {
     private static int forceRespawn(CommandSourceStack source) {
         ServerLevel level = source.getLevel();
         OreRespawnSavedData data = OreRespawnSavedData.get(level);
-        boolean requireOriginal = OreRespawnConfig.REQUIRE_EMPTY_SPACE_OR_ORIGINAL_FILLER.get();
+        boolean requireOriginal = RespawnConfig.REQUIRE_EMPTY_SPACE_OR_ORIGINAL_FILLER.get();
 
         List<MinedOreEntry> entries = new ArrayList<>(data.getEntries());
         int respawned = 0;

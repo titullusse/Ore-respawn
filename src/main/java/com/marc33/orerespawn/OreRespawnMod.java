@@ -1,6 +1,8 @@
 package com.marc33.orerespawn;
 
-import com.marc33.orerespawn.config.OreRespawnConfig;
+import com.marc33.orerespawn.config.DetectionConfig;
+import com.marc33.orerespawn.config.DimensionConfig;
+import com.marc33.orerespawn.config.RespawnConfig;
 import com.mojang.logging.LogUtils;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -20,7 +22,9 @@ public class OreRespawnMod {
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public OreRespawnMod(IEventBus modEventBus, ModContainer modContainer) {
-        modContainer.registerConfig(ModConfig.Type.SERVER, OreRespawnConfig.SPEC);
+        modContainer.registerConfig(ModConfig.Type.SERVER, RespawnConfig.SPEC, MOD_ID + "-respawn.toml");
+        modContainer.registerConfig(ModConfig.Type.SERVER, DetectionConfig.SPEC, MOD_ID + "-detection.toml");
+        modContainer.registerConfig(ModConfig.Type.SERVER, DimensionConfig.SPEC, MOD_ID + "-dimensions.toml");
         LOGGER.info("OreRespawn charge : les minerais mines reapparaitront apres le delai configure.");
     }
 }

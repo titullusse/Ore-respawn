@@ -1,7 +1,7 @@
 package com.marc33.orerespawn.event;
 
 import com.marc33.orerespawn.OreRespawnMod;
-import com.marc33.orerespawn.config.OreRespawnConfig;
+import com.marc33.orerespawn.config.DimensionConfig;
 import com.marc33.orerespawn.data.MinedOreEntry;
 import com.marc33.orerespawn.data.OreDetector;
 import com.marc33.orerespawn.data.OreRespawnSavedData;
@@ -29,7 +29,7 @@ public final class OreBreakListener {
         if (!(levelAccessor instanceof ServerLevel level)) {
             return;
         }
-        if (!OreRespawnConfig.isDimensionEnabled(level.dimension())) {
+        if (!DimensionConfig.isDimensionEnabled(level.dimension())) {
             return;
         }
 

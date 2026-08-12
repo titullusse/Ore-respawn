@@ -1,7 +1,8 @@
 package com.marc33.orerespawn.event;
 
 import com.marc33.orerespawn.OreRespawnMod;
-import com.marc33.orerespawn.config.OreRespawnConfig;
+import com.marc33.orerespawn.config.DimensionConfig;
+import com.marc33.orerespawn.config.RespawnConfig;
 import com.marc33.orerespawn.data.MinedOreEntry;
 import com.marc33.orerespawn.data.OreRespawnSavedData;
 import net.minecraft.core.BlockPos;
@@ -38,11 +39,11 @@ public final class OreRespawnTicker {
         if (--ticksUntilNextCheck > 0) {
             return;
         }
-        ticksUntilNextCheck = OreRespawnConfig.CHECK_INTERVAL_TICKS.get();
+        ticksUntilNextCheck = RespawnConfig.CHECK_INTERVAL_TICKS.get();
 
         MinecraftServer server = event.getServer();
         for (ServerLevel level : server.getAllLevels()) {
-            if (OreRespawnConfig.isDimensionEnabled(level.dimension())) {
+            if (DimensionConfig.isDimensionEnabled(level.dimension())) {
                 processLevel(level);
             }
         }
@@ -51,8 +52,8 @@ public final class OreRespawnTicker {
     private static void processLevel(ServerLevel level) {
         OreRespawnSavedData data = OreRespawnSavedData.get(level);
         long now = System.currentTimeMillis();
-        long delayMillis = OreRespawnConfig.RESPAWN_DELAY_SECONDS.get() * 1000L;
-        boolean requireOriginal = OreRespawnConfig.REQUIRE_EMPTY_SPACE_OR_ORIGINAL_FILLER.get();
+        long delayMillis = RespawnConfig.RESPAWN_DELAY_SECONDS.get() * 1000L;
+        boolean requireOriginal = RespawnConfig.REQUIRE_EMPTY_SPACE_OR_ORIGINAL_FILLER.get();
 
         List<MinedOreEntry> due = new ArrayList<>();
         for (MinedOreEntry entry : data.getEntries()) {
@@ -110,7 +111,7 @@ public final class OreRespawnTicker {
      * is within that many blocks of pos.
      */
     private static boolean isWithinRespawnRadius(ServerLevel level, BlockPos pos) {
-        int radius = OreRespawnConfig.RESPAWN_RADIUS.get();
+        int radius = RespawnConfig.RESPAWN_RADIUS.get();
         if (radius <= 0) {
             return true;
         }

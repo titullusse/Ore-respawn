@@ -41,20 +41,29 @@ Ces commandes necessitent le niveau d'operateur 2.
 
 ## Configuration
 
-La configuration serveur (`config/orerespawn-server.toml`, generee au premier lancement d'un
-monde) permet de regler :
+Chaque fonction du mod a son propre fichier de configuration serveur, genere au premier lancement
+d'un monde dans `serverconfig/` (dossier de sauvegarde du monde) :
 
+**`orerespawn-respawn.toml`** - delai et securite de la reapparition
 - `respawnDelaySeconds` - delai de reapparition, en secondes de temps reel (defaut : 86400).
 - `checkIntervalTicks` - intervalle entre deux verifications, en ticks serveur (defaut : 200).
 - `requireEmptySpaceOrOriginalFiller` - protection anti-ecrasement des builds (defaut : true).
 - `respawnRadius` - rayon en blocs autour d'un joueur dans lequel un minerai peut reapparaitre
   (defaut : 0, desactive - toute la dimension est consideree).
+
+**`orerespawn-detection.toml`** - quels blocs comptent comme des minerais
 - `useVanillaOreTag` / `useNeoForgeOreTag` / `useCustomOreTag` - active/desactive chaque source de
   detection.
 - `whitelist` / `blacklist` - identifiants de blocs (ex: `"mymod:ruby_ore"`) toujours/jamais
   traites comme des minerais.
-- `enabledDimensions` - dimensions dans lesquelles le mod est actif (defaut : overworld, nether,
-  end).
+
+**`orerespawn-dimensions.toml`** - dans quelles dimensions le mod agit
+- `enableAllDimensions` - si vrai (defaut), OreRespawn est actif dans toutes les dimensions
+  chargees, y compris celles ajoutees par d'autres mods, sans avoir a les lister.
+- `enabledDimensions` - utilise seulement si `enableAllDimensions` est desactive : liste explicite
+  des dimensions actives (defaut : overworld, nether, end).
+- `disabledDimensions` - dimensions toujours exclues, meme avec `enableAllDimensions` actif (ex:
+  une dimension "lobby" jetable d'un autre mod).
 
 ## Compiler
 
@@ -70,8 +79,11 @@ Le jar compile se trouve ensuite dans `build/libs/`.
 
 ```
 com.marc33.orerespawn
-├── OreRespawnMod.java            - classe principale, enregistre la config
-├── config/OreRespawnConfig.java  - ModConfigSpec : delai, intervalle, tags, whitelist/blacklist, dimensions
+├── OreRespawnMod.java             - classe principale, enregistre les 3 fichiers de config
+├── config/
+│   ├── RespawnConfig.java         - delai, intervalle, protection anti-ecrasement, rayon
+│   ├── DetectionConfig.java       - tags, whitelist/blacklist
+│   └── DimensionConfig.java       - dimensions activees/exclues
 ├── data/
 │   ├── OreDetector.java          - detection des minerais (tags + whitelist/blacklist)
 │   ├── MinedOreEntry.java        - record d'un minerai mine (pos, bloc, filler, timestamp) + NBT

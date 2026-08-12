@@ -1,7 +1,7 @@
 package com.marc33.orerespawn.data;
 
 import com.marc33.orerespawn.OreRespawnMod;
-import com.marc33.orerespawn.config.OreRespawnConfig;
+import com.marc33.orerespawn.config.DetectionConfig;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -48,15 +48,15 @@ public final class OreDetector {
     public static boolean isOre(BlockState state) {
         ResourceLocation id = BuiltInRegistries.BLOCK.getKey(state.getBlock());
 
-        if (isListed(id, OreRespawnConfig.BLACKLIST.get())) {
+        if (isListed(id, DetectionConfig.BLACKLIST.get())) {
             return false;
         }
 
-        if (isListed(id, OreRespawnConfig.WHITELIST.get())) {
+        if (isListed(id, DetectionConfig.WHITELIST.get())) {
             return true;
         }
 
-        if (OreRespawnConfig.USE_VANILLA_ORE_TAG.get()) {
+        if (DetectionConfig.USE_VANILLA_ORE_TAG.get()) {
             for (TagKey<Block> tag : VANILLA_ORE_TAGS) {
                 if (state.is(tag)) {
                     return true;
@@ -64,11 +64,11 @@ public final class OreDetector {
             }
         }
 
-        if (OreRespawnConfig.USE_NEOFORGE_ORE_TAG.get() && state.is(Tags.Blocks.ORES)) {
+        if (DetectionConfig.USE_NEOFORGE_ORE_TAG.get() && state.is(Tags.Blocks.ORES)) {
             return true;
         }
 
-        return OreRespawnConfig.USE_CUSTOM_ORE_TAG.get() && state.is(CUSTOM_ORE_TAG);
+        return DetectionConfig.USE_CUSTOM_ORE_TAG.get() && state.is(CUSTOM_ORE_TAG);
     }
 
     /**
