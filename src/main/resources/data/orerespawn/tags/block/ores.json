@@ -1,0 +1,5 @@
+{
+  "//": "Extensible tag: add modded ore blocks here so OreRespawn treats them as ores too, on top of #minecraft:ores.",
+  "replace": false,
+  "values": []
+}
