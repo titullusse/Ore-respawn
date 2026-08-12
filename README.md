@@ -13,11 +13,13 @@ apres un delai configurable (24h par defaut).
   d'origine, afin de ne pas ecraser les constructions des joueurs.
 - Si le chunk n'est pas charge au moment de la verification, l'entree est conservee et reessayee
   au prochain passage.
-- La detection des minerais se base sur les tags vanilla `#minecraft:*_ores` (coal, copper, diamond,
-  emerald, gold, iron, lapis, redstone), le tag personnalise et extensible `#orerespawn:ores`
-  (`data/orerespawn/tags/block/ores.json` - couvre aussi le quartz du Nether et les debris antiques,
-  qui n'ont pas de tag vanilla dedie), et une whitelist/blacklist configurables (la blacklist est
-  prioritaire).
+- La detection des minerais se base sur trois sources cumulables : les tags vanilla
+  `#minecraft:*_ores` (coal, copper, diamond, emerald, gold, iron, lapis, redstone), le tag de
+  convention NeoForge `#c:ores` (couvre deja tout le vanilla, y compris le quartz du Nether et
+  les debris antiques, et c'est le tag que la plupart des mods utilisent pour leurs propres
+  minerais), et le tag personnalise et extensible `#orerespawn:ores`
+  (`data/orerespawn/tags/block/ores.json`). Une whitelist/blacklist configurables complete le tout
+  (la blacklist est prioritaire).
 
 C'est un mod **server-only** : il n'a aucun contenu cote client et n'a pas besoin d'etre installe
 sur le client pour se connecter a un serveur qui l'utilise.
@@ -38,7 +40,8 @@ monde) permet de regler :
 - `respawnDelaySeconds` - delai de reapparition, en secondes de temps reel (defaut : 86400).
 - `checkIntervalTicks` - intervalle entre deux verifications, en ticks serveur (defaut : 200).
 - `requireEmptySpaceOrOriginalFiller` - protection anti-ecrasement des builds (defaut : true).
-- `useVanillaOreTag` / `useCustomOreTag` - active/desactive chaque source de detection.
+- `useVanillaOreTag` / `useNeoForgeOreTag` / `useCustomOreTag` - active/desactive chaque source de
+  detection.
 - `whitelist` / `blacklist` - identifiants de blocs (ex: `"mymod:ruby_ore"`) toujours/jamais
   traites comme des minerais.
 - `enabledDimensions` - dimensions dans lesquelles le mod est actif (defaut : overworld, nether,

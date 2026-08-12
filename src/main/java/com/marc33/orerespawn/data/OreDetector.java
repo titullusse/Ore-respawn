@@ -10,6 +10,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.common.Tags;
 
 import java.util.List;
 
@@ -25,7 +26,10 @@ public final class OreDetector {
     /**
      * Vanilla has no single combined "ores" block tag: each material has its own
      * (coal_ores, iron_ores, ...). Nether quartz ore and ancient debris aren't covered by
-     * any of these either, so they're listed in the bundled {@link #CUSTOM_ORE_TAG} instead.
+     * any of these either; {@link Tags.Blocks#ORES} (the NeoForge convention tag "#c:ores")
+     * already covers all of them, and is also what most modded ores tag themselves with for
+     * cross-mod compatibility. They're additionally listed in {@link #CUSTOM_ORE_TAG} so
+     * detection still works with the convention tag disabled.
      */
     private static final List<TagKey<Block>> VANILLA_ORE_TAGS = List.of(
             BlockTags.COAL_ORES,
@@ -58,6 +62,10 @@ public final class OreDetector {
                     return true;
                 }
             }
+        }
+
+        if (OreRespawnConfig.USE_NEOFORGE_ORE_TAG.get() && state.is(Tags.Blocks.ORES)) {
+            return true;
         }
 
         return OreRespawnConfig.USE_CUSTOM_ORE_TAG.get() && state.is(CUSTOM_ORE_TAG);

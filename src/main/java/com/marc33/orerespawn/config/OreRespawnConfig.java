@@ -16,6 +16,7 @@ public final class OreRespawnConfig {
     public static final ModConfigSpec.BooleanValue REQUIRE_EMPTY_SPACE_OR_ORIGINAL_FILLER;
 
     public static final ModConfigSpec.BooleanValue USE_VANILLA_ORE_TAG;
+    public static final ModConfigSpec.BooleanValue USE_NEOFORGE_ORE_TAG;
     public static final ModConfigSpec.BooleanValue USE_CUSTOM_ORE_TAG;
     public static final ModConfigSpec.ConfigValue<List<? extends String>> WHITELIST;
     public static final ModConfigSpec.ConfigValue<List<? extends String>> BLACKLIST;
@@ -58,6 +59,15 @@ public final class OreRespawnConfig {
         USE_VANILLA_ORE_TAG = builder
                 .comment("Utiliser les tags vanilla #minecraft:*_ores (coal, copper, diamond, emerald, gold, iron, lapis, redstone) pour detecter les blocs de minerai.")
                 .define("useVanillaOreTag", true);
+
+        USE_NEOFORGE_ORE_TAG = builder
+                .comment(
+                        "Utiliser le tag de convention NeoForge #c:ores pour detecter les blocs de minerai.",
+                        "Ce tag couvre deja tous les minerais vanilla (y compris le quartz du Nether et",
+                        "les debris antiques) et c'est celui que la plupart des mods utilisent pour",
+                        "rendre leurs propres minerais reconnaissables par les autres mods."
+                )
+                .define("useNeoForgeOreTag", true);
 
         USE_CUSTOM_ORE_TAG = builder
                 .comment("Utiliser le tag personnalise #orerespawn:ores (data/orerespawn/tags/block/ores.json) pour detecter des minerais additionnels/moddes.")
