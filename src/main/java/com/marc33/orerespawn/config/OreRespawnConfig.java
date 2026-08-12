@@ -56,7 +56,7 @@ public final class OreRespawnConfig {
         builder.push("detection");
 
         USE_VANILLA_ORE_TAG = builder
-                .comment("Utiliser le tag vanilla #minecraft:ores pour detecter les blocs de minerai.")
+                .comment("Utiliser les tags vanilla #minecraft:*_ores (coal, copper, diamond, emerald, gold, iron, lapis, redstone) pour detecter les blocs de minerai.")
                 .define("useVanillaOreTag", true);
 
         USE_CUSTOM_ORE_TAG = builder
@@ -68,14 +68,14 @@ public final class OreRespawnConfig {
                         "Identifiants de blocs (ex: \"mymod:ruby_ore\") toujours traites comme des",
                         "minerais par OreRespawn, meme s'ils ne sont dans aucun des tags ci-dessus."
                 )
-                .defineListAllowEmpty("whitelist", List.of(), OreRespawnConfig::isValidBlockId);
+                .defineListAllowEmpty("whitelist", List.of(), () -> "", OreRespawnConfig::isValidBlockId);
 
         BLACKLIST = builder
                 .comment(
                         "Identifiants de blocs jamais traites comme des minerais par OreRespawn.",
                         "La blacklist est prioritaire sur les tags et sur la whitelist."
                 )
-                .defineListAllowEmpty("blacklist", List.of(), OreRespawnConfig::isValidBlockId);
+                .defineListAllowEmpty("blacklist", List.of(), () -> "", OreRespawnConfig::isValidBlockId);
 
         builder.pop();
 
@@ -89,6 +89,7 @@ public final class OreRespawnConfig {
                 .defineListAllowEmpty(
                         "enabledDimensions",
                         List.of("minecraft:overworld", "minecraft:the_nether", "minecraft:the_end"),
+                        () -> "minecraft:overworld",
                         OreRespawnConfig::isValidBlockId
                 );
 

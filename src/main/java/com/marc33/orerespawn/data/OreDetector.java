@@ -11,6 +11,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
+import java.util.List;
+
 /**
  * Decides whether a broken block should be tracked by OreRespawn, and what stone-like
  * block it was embedded in (used later to detect whether a player has built over the hole).
@@ -19,6 +21,22 @@ public final class OreDetector {
 
     public static final TagKey<Block> CUSTOM_ORE_TAG =
             TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(OreRespawnMod.MOD_ID, "ores"));
+
+    /**
+     * Vanilla has no single combined "ores" block tag: each material has its own
+     * (coal_ores, iron_ores, ...). Nether quartz ore and ancient debris aren't covered by
+     * any of these either, so they're listed in the bundled {@link #CUSTOM_ORE_TAG} instead.
+     */
+    private static final List<TagKey<Block>> VANILLA_ORE_TAGS = List.of(
+            BlockTags.COAL_ORES,
+            BlockTags.COPPER_ORES,
+            BlockTags.DIAMOND_ORES,
+            BlockTags.EMERALD_ORES,
+            BlockTags.GOLD_ORES,
+            BlockTags.IRON_ORES,
+            BlockTags.LAPIS_ORES,
+            BlockTags.REDSTONE_ORES
+    );
 
     private OreDetector() {
     }
@@ -34,8 +52,12 @@ public final class OreDetector {
             return true;
         }
 
-        if (OreRespawnConfig.USE_VANILLA_ORE_TAG.get() && state.is(BlockTags.ORES)) {
-            return true;
+        if (OreRespawnConfig.USE_VANILLA_ORE_TAG.get()) {
+            for (TagKey<Block> tag : VANILLA_ORE_TAGS) {
+                if (state.is(tag)) {
+                    return true;
+                }
+            }
         }
 
         return OreRespawnConfig.USE_CUSTOM_ORE_TAG.get() && state.is(CUSTOM_ORE_TAG);
@@ -63,7 +85,7 @@ public final class OreDetector {
         return Blocks.STONE;
     }
 
-    private static boolean isListed(ResourceLocation id, java.util.List<? extends String> list) {
+    private static boolean isListed(ResourceLocation id, List<? extends String> list) {
         String s = id.toString();
         for (String entry : list) {
             if (entry.equals(s)) {

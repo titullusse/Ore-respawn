@@ -13,9 +13,11 @@ apres un delai configurable (24h par defaut).
   d'origine, afin de ne pas ecraser les constructions des joueurs.
 - Si le chunk n'est pas charge au moment de la verification, l'entree est conservee et reessayee
   au prochain passage.
-- La detection des minerais se base sur le tag vanilla `#minecraft:ores`, le tag personnalise et
-  extensible `#orerespawn:ores` (`data/orerespawn/tags/block/ores.json`), et une whitelist/blacklist
-  configurables (la blacklist est prioritaire).
+- La detection des minerais se base sur les tags vanilla `#minecraft:*_ores` (coal, copper, diamond,
+  emerald, gold, iron, lapis, redstone), le tag personnalise et extensible `#orerespawn:ores`
+  (`data/orerespawn/tags/block/ores.json` - couvre aussi le quartz du Nether et les debris antiques,
+  qui n'ont pas de tag vanilla dedie), et une whitelist/blacklist configurables (la blacklist est
+  prioritaire).
 
 C'est un mod **server-only** : il n'a aucun contenu cote client et n'a pas besoin d'etre installe
 sur le client pour se connecter a un serveur qui l'utilise.
