@@ -8,6 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -70,12 +71,17 @@ public final class OreRespawnTicker {
      * elapsed. Also used by {@code /orerespawn respawn} to force an immediate respawn.
      *
      * @return true if the ore was respawned (or its entry dropped as stale), false if it was
-     * left in place to be retried later (unloaded chunk, or space occupied by a player build)
+     * left in place to be retried later (unloaded chunk, no player within respawnRadius, or
+     * space occupied by a player build)
      */
     public static boolean tryRespawn(ServerLevel level, OreRespawnSavedData data, MinedOreEntry entry, boolean requireOriginal) {
         BlockPos pos = entry.pos();
 
         if (!level.isLoaded(pos)) {
+            return false;
+        }
+
+        if (!isWithinRespawnRadius(level, pos)) {
             return false;
         }
 
@@ -97,5 +103,24 @@ public final class OreRespawnTicker {
         level.setBlockAndUpdate(pos, oreBlock.get().defaultBlockState());
         data.removeEntry(entry);
         return true;
+    }
+
+    /**
+     * True if {@code respawnRadius} is disabled (0), or if at least one player in the level
+     * is within that many blocks of pos.
+     */
+    private static boolean isWithinRespawnRadius(ServerLevel level, BlockPos pos) {
+        int radius = OreRespawnConfig.RESPAWN_RADIUS.get();
+        if (radius <= 0) {
+            return true;
+        }
+
+        double radiusSq = (double) radius * radius;
+        for (ServerPlayer player : level.players()) {
+            if (player.blockPosition().distSqr(pos) <= radiusSq) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -14,6 +14,7 @@ public final class OreRespawnConfig {
     public static final ModConfigSpec.IntValue RESPAWN_DELAY_SECONDS;
     public static final ModConfigSpec.IntValue CHECK_INTERVAL_TICKS;
     public static final ModConfigSpec.BooleanValue REQUIRE_EMPTY_SPACE_OR_ORIGINAL_FILLER;
+    public static final ModConfigSpec.IntValue RESPAWN_RADIUS;
 
     public static final ModConfigSpec.BooleanValue USE_VANILLA_ORE_TAG;
     public static final ModConfigSpec.BooleanValue USE_NEOFORGE_ORE_TAG;
@@ -51,6 +52,15 @@ public final class OreRespawnConfig {
                         "constructions des joueurs contre un ecrasement par la regeneration."
                 )
                 .define("requireEmptySpaceOrOriginalFiller", true);
+
+        RESPAWN_RADIUS = builder
+                .comment(
+                        "Rayon (en blocs) autour d'un joueur dans lequel un minerai est autorise a",
+                        "reapparaitre. Un minerai hors de portee de tout joueur de la dimension est",
+                        "laisse en attente et reessaye au prochain passage.",
+                        "0 desactive cette restriction (comportement par defaut : toute la dimension)."
+                )
+                .defineInRange("respawnRadius", 0, 0, Integer.MAX_VALUE);
 
         builder.pop();
 

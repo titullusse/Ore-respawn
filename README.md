@@ -13,6 +13,9 @@ apres un delai configurable (24h par defaut).
   d'origine, afin de ne pas ecraser les constructions des joueurs.
 - Si le chunk n'est pas charge au moment de la verification, l'entree est conservee et reessayee
   au prochain passage.
+- Un rayon (en blocs) autour des joueurs peut etre configure : un minerai hors de portee de tout
+  joueur de la dimension n'est pas regenere et attend le prochain passage (desactive par defaut,
+  toute la dimension est alors consideree).
 - La detection des minerais se base sur trois sources cumulables : les tags vanilla
   `#minecraft:*_ores` (coal, copper, diamond, emerald, gold, iron, lapis, redstone), le tag de
   convention NeoForge `#c:ores` (couvre deja tout le vanilla, y compris le quartz du Nether et
@@ -31,8 +34,8 @@ sur le client pour se connecter a un serveur qui l'utilise.
 - `/orerespawn count` - affiche le nombre de minerais en attente dans la dimension courante.
 - `/orerespawn respawn` - force la reapparition immediate de tous les minerais en attente dans la
   dimension courante, sans attendre le delai configure. Respecte toujours la protection
-  anti-ecrasement des builds et laisse en attente les minerais dont le chunk n'est pas charge ou
-  dont l'emplacement est occupe.
+  anti-ecrasement des builds, le rayon autour des joueurs (`respawnRadius`) et laisse en attente
+  les minerais dont le chunk n'est pas charge ou dont l'emplacement est occupe.
 
 Ces commandes necessitent le niveau d'operateur 2.
 
@@ -44,6 +47,8 @@ monde) permet de regler :
 - `respawnDelaySeconds` - delai de reapparition, en secondes de temps reel (defaut : 86400).
 - `checkIntervalTicks` - intervalle entre deux verifications, en ticks serveur (defaut : 200).
 - `requireEmptySpaceOrOriginalFiller` - protection anti-ecrasement des builds (defaut : true).
+- `respawnRadius` - rayon en blocs autour d'un joueur dans lequel un minerai peut reapparaitre
+  (defaut : 0, desactive - toute la dimension est consideree).
 - `useVanillaOreTag` / `useNeoForgeOreTag` / `useCustomOreTag` - active/desactive chaque source de
   detection.
 - `whitelist` / `blacklist` - identifiants de blocs (ex: `"mymod:ruby_ore"`) toujours/jamais
