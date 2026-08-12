@@ -1,0 +1,32 @@
+# Gradle
+.gradle/
+build/
+out/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Eclipse
+.project
+.classpath
+.settings/
+bin/
+
+# IntelliJ
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# VS Code
+.vscode/
+.factorypath
+
+# macOS
+.DS_Store
+
+# Minecraft / NeoForge run directories
+run/
+runs/
+logs/
+
+# Generated resources
+src/generated/

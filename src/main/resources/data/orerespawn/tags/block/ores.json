@@ -1,0 +1,8 @@
+{
+  "//": "Extensible tag: add modded ore blocks here so OreRespawn treats them as ores too, on top of vanilla's #minecraft:*_ores tags. Also covers vanilla ores that have no dedicated tag of their own.",
+  "replace": false,
+  "values": [
+    "minecraft:nether_quartz_ore",
+    "minecraft:ancient_debris"
+  ]
+}
