@@ -29,6 +29,10 @@ sur le client pour se connecter a un serveur qui l'utilise.
 - `/orerespawn list [page]` - liste les minerais en attente de reapparition dans la dimension
   courante (10 par page).
 - `/orerespawn count` - affiche le nombre de minerais en attente dans la dimension courante.
+- `/orerespawn respawn` - force la reapparition immediate de tous les minerais en attente dans la
+  dimension courante, sans attendre le delai configure. Respecte toujours la protection
+  anti-ecrasement des builds et laisse en attente les minerais dont le chunk n'est pas charge ou
+  dont l'emplacement est occupe.
 
 Ces commandes necessitent le niveau d'operateur 2.
 
@@ -70,5 +74,5 @@ com.marc33.orerespawn
 ├── event/
 │   ├── OreBreakListener.java     - enregistre les minerais casses (BlockEvent.BreakEvent)
 │   └── OreRespawnTicker.java     - regenere les minerais dont le delai est ecoule (ServerTickEvent.Post)
-└── command/OreRespawnCommand.java - /orerespawn list [page] et /orerespawn count (OP niveau 2)
+└── command/OreRespawnCommand.java - /orerespawn list [page], count et respawn (OP niveau 2)
 ```

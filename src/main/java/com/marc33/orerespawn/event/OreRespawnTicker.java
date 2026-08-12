@@ -61,21 +61,28 @@ public final class OreRespawnTicker {
         }
 
         for (MinedOreEntry entry : due) {
-            respawnIfPossible(level, data, entry, requireOriginal);
+            tryRespawn(level, data, entry, requireOriginal);
         }
     }
 
-    private static void respawnIfPossible(ServerLevel level, OreRespawnSavedData data, MinedOreEntry entry, boolean requireOriginal) {
+    /**
+     * Attempts to respawn a single mined ore entry, regardless of whether its delay has
+     * elapsed. Also used by {@code /orerespawn respawn} to force an immediate respawn.
+     *
+     * @return true if the ore was respawned (or its entry dropped as stale), false if it was
+     * left in place to be retried later (unloaded chunk, or space occupied by a player build)
+     */
+    public static boolean tryRespawn(ServerLevel level, OreRespawnSavedData data, MinedOreEntry entry, boolean requireOriginal) {
         BlockPos pos = entry.pos();
 
         if (!level.isLoaded(pos)) {
-            return;
+            return false;
         }
 
         Optional<Block> oreBlock = BuiltInRegistries.BLOCK.getOptional(entry.oreBlockId());
         if (oreBlock.isEmpty()) {
             data.removeEntry(entry);
-            return;
+            return false;
         }
 
         if (requireOriginal) {
@@ -83,11 +90,12 @@ public final class OreRespawnTicker {
             Block fillerBlock = BuiltInRegistries.BLOCK.getOptional(entry.fillerBlockId()).orElse(Blocks.STONE);
             boolean spaceIsSafe = current.isAir() || current.is(fillerBlock);
             if (!spaceIsSafe) {
-                return;
+                return false;
             }
         }
 
         level.setBlockAndUpdate(pos, oreBlock.get().defaultBlockState());
         data.removeEntry(entry);
+        return true;
     }
 }

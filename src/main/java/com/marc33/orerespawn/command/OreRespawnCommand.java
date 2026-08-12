@@ -4,6 +4,7 @@ import com.marc33.orerespawn.OreRespawnMod;
 import com.marc33.orerespawn.config.OreRespawnConfig;
 import com.marc33.orerespawn.data.MinedOreEntry;
 import com.marc33.orerespawn.data.OreRespawnSavedData;
+import com.marc33.orerespawn.event.OreRespawnTicker;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -14,11 +15,12 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * {@code /orerespawn list [page]} and {@code /orerespawn count}, scoped to the caller's
- * current dimension. Requires permission level 2 (server operator).
+ * {@code /orerespawn list [page]}, {@code /orerespawn count} and {@code /orerespawn respawn},
+ * scoped to the caller's current dimension. Requires permission level 2 (server operator).
  */
 @EventBusSubscriber(modid = OreRespawnMod.MOD_ID)
 public final class OreRespawnCommand {
@@ -40,6 +42,8 @@ public final class OreRespawnCommand {
                                         .executes(ctx -> listOres(ctx.getSource(), IntegerArgumentType.getInteger(ctx, "page")))))
                         .then(Commands.literal("count")
                                 .executes(ctx -> countOres(ctx.getSource())))
+                        .then(Commands.literal("respawn")
+                                .executes(ctx -> forceRespawn(ctx.getSource())))
         );
     }
 
@@ -83,5 +87,33 @@ public final class OreRespawnCommand {
         int count = OreRespawnSavedData.get(level).getEntries().size();
         source.sendSuccess(() -> Component.literal("Minerais en attente de reapparition dans cette dimension : " + count), false);
         return count;
+    }
+
+    /**
+     * Forces every mined ore in the caller's dimension to respawn immediately, ignoring the
+     * configured delay. Still honours {@code requireEmptySpaceOrOriginalFiller} and skips
+     * entries in unloaded chunks, which are left in the log to be retried normally.
+     */
+    private static int forceRespawn(CommandSourceStack source) {
+        ServerLevel level = source.getLevel();
+        OreRespawnSavedData data = OreRespawnSavedData.get(level);
+        boolean requireOriginal = OreRespawnConfig.REQUIRE_EMPTY_SPACE_OR_ORIGINAL_FILLER.get();
+
+        List<MinedOreEntry> entries = new ArrayList<>(data.getEntries());
+        int respawned = 0;
+        for (MinedOreEntry entry : entries) {
+            if (OreRespawnTicker.tryRespawn(level, data, entry, requireOriginal)) {
+                respawned++;
+            }
+        }
+
+        int skipped = entries.size() - respawned;
+        int finalRespawned = respawned;
+        source.sendSuccess(() -> Component.literal(String.format(
+                "%d minerai(s) regenere(s) immediatement. %d laisse(s) en attente (chunk non charge ou emplacement occupe).",
+                finalRespawned, skipped
+        )), true);
+
+        return respawned;
     }
 }
