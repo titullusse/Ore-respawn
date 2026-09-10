@@ -52,7 +52,7 @@ public final class OreRespawnTicker {
     private static void processLevel(ServerLevel level) {
         OreRespawnSavedData data = OreRespawnSavedData.get(level);
         long now = System.currentTimeMillis();
-        long delayMillis = RespawnConfig.RESPAWN_DELAY_SECONDS.get() * 1000L;
+        long delayMillis = RespawnConfig.effectiveDelayMillis();
         boolean requireOriginal = RespawnConfig.REQUIRE_EMPTY_SPACE_OR_ORIGINAL_FILLER.get();
 
         List<MinedOreEntry> due = new ArrayList<>();

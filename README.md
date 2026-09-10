@@ -16,6 +16,9 @@ apres un delai configurable (24h par defaut).
 - Un rayon (en blocs) autour des joueurs peut etre configure : un minerai hors de portee de tout
   joueur de la dimension n'est pas regenere et attend le prochain passage (desactive par defaut,
   toute la dimension est alors consideree).
+- Un systeme de saisons optionnel peut multiplier le delai de reapparition selon la saison reelle
+  en cours (basee sur la date du serveur) : reapparition plus rapide en ete, plus lente en hiver
+  par exemple. Desactive par defaut.
 - La detection des minerais se base sur trois sources cumulables : les tags vanilla
   `#minecraft:*_ores` (coal, copper, diamond, emerald, gold, iron, lapis, redstone), le tag de
   convention NeoForge `#c:ores` (couvre deja tout le vanilla, y compris le quartz du Nether et
@@ -65,6 +68,16 @@ Chaque fonction du mod a son propre fichier de configuration serveur, genere dan
 - `disabledDimensions` - dimensions toujours exclues, meme avec `enableAllDimensions` actif (ex:
   une dimension "lobby" jetable d'un autre mod).
 
+**`orerespawn-seasons.toml`** - variation saisonniere du delai de reapparition
+- `enableSeasons` - active le systeme de saisons (defaut : false, `respawnDelaySeconds` est alors
+  utilise tel quel toute l'annee).
+- `southernHemisphere` - inverse les saisons pour l'hemisphere sud (defaut : false).
+- `springDelayMultiplier` / `summerDelayMultiplier` / `autumnDelayMultiplier` /
+  `winterDelayMultiplier` - multiplicateurs appliques a `respawnDelaySeconds` selon la saison
+  (defauts : 1.0 / 0.75 / 1.0 / 1.5 - reapparition plus rapide en ete, plus lente en hiver). La
+  saison est determinee par le mois calendaire du serveur au moment du calcul (printemps :
+  mars-mai, ete : juin-aout, automne : septembre-novembre, hiver : decembre-fevrier).
+
 ## Compiler
 
 Prerequis : JDK 21.
@@ -86,8 +99,8 @@ faut lancer ou rejoindre un vrai serveur dedie pour le tester :
 2. Copier `orerespawn-1.0.0.jar` dans le dossier `mods/` du serveur.
 3. Demarrer le serveur, verifier dans les logs que `OreRespawn 1.0.0 (orerespawn)` apparait dans
    la liste des mods charges.
-4. Les fichiers `orerespawn-respawn.toml`, `orerespawn-detection.toml` et
-   `orerespawn-dimensions.toml` apparaissent dans `config/`.
+4. Les fichiers `orerespawn-respawn.toml`, `orerespawn-detection.toml`,
+   `orerespawn-dimensions.toml` et `orerespawn-seasons.toml` apparaissent dans `config/`.
 5. En jeu (avec les droits OP niveau 2) : miner un minerai, verifier `/orerespawn list` et
    `/orerespawn count`, puis `/orerespawn respawn` pour le faire reapparaitre immediatement sans
    attendre le delai.
@@ -96,11 +109,13 @@ faut lancer ou rejoindre un vrai serveur dedie pour le tester :
 
 ```
 com.marc33.orerespawn
-├── OreRespawnMod.java             - classe principale, enregistre les 3 fichiers de config
+├── OreRespawnMod.java             - classe principale, enregistre les 4 fichiers de config
 ├── config/
 │   ├── RespawnConfig.java         - delai, intervalle, protection anti-ecrasement, rayon
 │   ├── DetectionConfig.java       - tags, whitelist/blacklist
-│   └── DimensionConfig.java       - dimensions activees/exclues
+│   ├── DimensionConfig.java       - dimensions activees/exclues
+│   └── SeasonConfig.java          - multiplicateurs de delai par saison
+├── time/Season.java               - saison reelle courante (calendrier), a partir de la config
 ├── data/
 │   ├── OreDetector.java          - detection des minerais (tags + whitelist/blacklist)
 │   ├── MinedOreEntry.java        - record d'un minerai mine (pos, bloc, filler, timestamp) + NBT
