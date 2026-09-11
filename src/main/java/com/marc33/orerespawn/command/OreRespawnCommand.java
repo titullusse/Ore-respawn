@@ -61,7 +61,7 @@ public final class OreRespawnCommand {
         int fromIndex = (clampedPage - 1) * ENTRIES_PER_PAGE;
         int toIndex = Math.min(fromIndex + ENTRIES_PER_PAGE, entries.size());
 
-        long delayMillis = RespawnConfig.RESPAWN_DELAY_SECONDS.get() * 1000L;
+        long delayMillis = RespawnConfig.effectiveDelayMillis();
         long now = System.currentTimeMillis();
 
         int finalClampedPage = clampedPage;

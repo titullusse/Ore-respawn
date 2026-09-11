@@ -1,5 +1,6 @@
 package com.marc33.orerespawn.config;
 
+import com.marc33.orerespawn.time.Season;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 /**
@@ -56,5 +57,17 @@ public final class RespawnConfig {
     }
 
     private RespawnConfig() {
+    }
+
+    /**
+     * {@code respawnDelaySeconds}, in milliseconds, scaled by the current season's multiplier
+     * when {@code enableSeasons} is on (see {@link SeasonConfig}).
+     */
+    public static long effectiveDelayMillis() {
+        long baseMillis = RESPAWN_DELAY_SECONDS.get() * 1000L;
+        if (!SeasonConfig.ENABLE_SEASONS.get()) {
+            return baseMillis;
+        }
+        return (long) (baseMillis * Season.current().delayMultiplier());
     }
 }
